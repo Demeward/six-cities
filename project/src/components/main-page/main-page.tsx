@@ -1,11 +1,13 @@
-import OfferCard from '../offer-card/offer-card';
+import OffersList from '../offers-list/offers-list';
+import {Offer} from '../../types/offer';
 import Logo from '../logo/logo';
 
 type MainOffersCount = {
   offersCount: number;
+  offers: Offer[],
 }
 
-function MainPage({offersCount}: MainOffersCount): JSX.Element {
+function MainPage({offersCount, offers}: MainOffersCount): JSX.Element {
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -91,11 +93,7 @@ function MainPage({offersCount}: MainOffersCount): JSX.Element {
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-                <OfferCard />
-                <OfferCard />
-                <OfferCard />
-                <OfferCard />
-                <OfferCard />
+                <OffersList offersCount={offersCount} offers={offers}/>
               </div>
             </section>
             <div className="cities__right-section">
