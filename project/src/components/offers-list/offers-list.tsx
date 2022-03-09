@@ -2,14 +2,14 @@ import {Offer} from '../../types/offer';
 import OfferCard from '../offer-card/offer-card';
 
 type MainOffers = {
-  offersCount: number,
   offers: Offer[],
+  onOffersListCardHover: (activeOfferId: number | null) => void,
 }
 
-function OffersList({offersCount, offers}: MainOffers): JSX.Element {
+function OffersList({offers, onOffersListCardHover}: MainOffers): JSX.Element {
   return (
     <>
-      {offers.map((offer) => <OfferCard key={offer.id} offer={offer} />)}
+      {offers.map((offer) => <OfferCard key={offer.id} offer={offer} onOffersListCardHover={onOffersListCardHover}/>)}
     </>
   );
 }

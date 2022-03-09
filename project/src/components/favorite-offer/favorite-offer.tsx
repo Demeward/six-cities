@@ -1,40 +1,24 @@
 import {Offer} from '../../types/offer';
 import {Link} from 'react-router-dom';
-import {useState} from 'react';
 
 type OfferType = {
   offer: Offer,
-  onOffersListCardHover: (activeOfferId: number| null) => void,
 }
 
-function OfferCard({offer, onOffersListCardHover}: OfferType): JSX.Element {
+function FavoriteOffer({offer}: OfferType): JSX.Element {
   const {id, isPremium, isFavorite, previewImage, price, rating, title, type} = offer;
-  const [activeOffer, setActiveOffer] = useState<number | null>(null);
 
   return (
-    <article className="cities__place-card place-card"
-      onMouseEnter={() => {
-        if (activeOffer !== id) {
-          setActiveOffer(id);
-          onOffersListCardHover(id);
-        }
-      }}
-      onMouseLeave={() => {
-        setActiveOffer(null);
-        onOffersListCardHover(null);
-      }}
-    >
+    <article className="favorites__card place-card">
       <div className={isPremium ? 'place-card__mark' : 'visually-hidden'}>
         <span>Premium</span>
       </div>
-      <div className="cities__image-wrapper place-card__image-wrapper">
+      <div className="favorites__image-wrapper place-card__image-wrapper">
         <Link to={`/offer/${id}`}>
-          <img className="place-card__image" src={previewImage} width="260" height="200"
-            alt="Place image"
-          />
+          <img className="place-card__image" src={previewImage} width="260" height="200" alt="Place image"/>
         </Link>
       </div>
-      <div className="place-card__info">
+      <div className="favorites__card-info place-card__info">
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">&euro;{price}</b>
@@ -44,12 +28,12 @@ function OfferCard({offer, onOffersListCardHover}: OfferType): JSX.Element {
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg>
-            <span className="visually-hidden">To bookmarks</span>
+            <span className="visually-hidden">In bookmarks</span>
           </button>
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{width: '80%'}}></span>
+            <span style={{width: '40%'}}></span>
             <span className="visually-hidden">{rating}</span>
           </div>
         </div>
@@ -62,4 +46,4 @@ function OfferCard({offer, onOffersListCardHover}: OfferType): JSX.Element {
   );
 }
 
-export default OfferCard;
+export default FavoriteOffer;

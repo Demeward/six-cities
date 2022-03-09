@@ -1,13 +1,23 @@
 import OffersList from '../offers-list/offers-list';
 import {Offer} from '../../types/offer';
 import Logo from '../logo/logo';
+import Map from '../map/map';
+import {useState} from 'react';
+// import {Link} from 'react-router-dom';
+// import {AppRoute} from '../../const';
 
 type MainOffersCount = {
-  offersCount: number;
   offers: Offer[],
 }
 
-function MainPage({offersCount, offers}: MainOffersCount): JSX.Element {
+function MainPage({offers}: MainOffersCount): JSX.Element {
+
+  const [activeOffer, setActiveOffer] = useState<Offer | undefined>(undefined);
+  const onOffersListCardHover = (activeOfferId: number | null) => {
+    const currentOffer = offers.find((offer) => offer.id === activeOfferId);
+    setActiveOffer(currentOffer);
+  };
+
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -93,11 +103,13 @@ function MainPage({offersCount, offers}: MainOffersCount): JSX.Element {
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-                <OffersList offersCount={offersCount} offers={offers}/>
+                <OffersList offers={offers} onOffersListCardHover={onOffersListCardHover}/>
               </div>
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map"></section>
+              <section className="cities__map map">
+                <Map offers={offers} activeOffer={activeOffer}/>
+              </section>
             </div>
           </div>
         </div>

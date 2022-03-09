@@ -6,7 +6,7 @@ export type Offer = {
   },
   description: string,
   goods: string[],
-  host: PropertyHost,
+  host: User,
   id: number,
   images: string[],
   isFavorite: boolean,
@@ -26,7 +26,7 @@ export type Location = {
   zoom: number
 }
 
-export type PropertyHost = {
+export type User = {
   avatarUrl: string,
   id: number,
   isPro: boolean,
@@ -36,3 +36,12 @@ export type PropertyHost = {
 export type OfferType = {
   offer: Offer | undefined;
  }
+
+
+export type Comment = {
+  comment: string,
+  date: string,
+  id: number,
+  rating: number,
+  user: User,
+}

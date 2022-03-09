@@ -10,7 +10,7 @@ type PropertyRouteProps = {
 function PropertyRoute({offers}: PropertyRouteProps): JSX.Element {
   const { id } = useParams<{ id: string }>();
   const offer = offers.find((item) => item.id === Number(id));
-  return offer === undefined ? <NoPage /> : <Property offer={offer} />;
+  return offer === undefined ? <NoPage /> : <Property offers={offers} offer={offer} />;
 }
 
 export default PropertyRoute;
