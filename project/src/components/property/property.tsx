@@ -1,12 +1,12 @@
 import PropertyFeatures from '../property-features/property-features';
 import ReviewForm from '../review-form/review-form';
 import ReviewsList from '../reviews-list/reviews-list';
-import { Offer } from '../../types/offer';
+import { Offer, OfferType } from '../../types/offer';
 import Map from '../map/map';
 import {comments} from '../../mocks/comments';
 
 type PropertyScreen = {
-  offers: Offer[],
+  offers: OfferType,
   offer: Offer,
 }
 

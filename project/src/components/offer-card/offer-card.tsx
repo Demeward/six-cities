@@ -1,27 +1,24 @@
 import {Offer} from '../../types/offer';
 import {Link} from 'react-router-dom';
-import {useState} from 'react';
 
 type OfferType = {
   offer: Offer,
-  onOffersListCardHover: (activeOfferId: number| null) => void,
+  updateState: (value: Offer | null) => void;
+  activeOffer: Offer | null;
 }
 
-function OfferCard({offer, onOffersListCardHover}: OfferType): JSX.Element {
+function OfferCard({offer, updateState, activeOffer}:OfferType): JSX.Element {
   const {id, isPremium, isFavorite, previewImage, price, rating, title, type} = offer;
-  const [activeOffer, setActiveOffer] = useState<number | null>(null);
 
   return (
     <article className="cities__place-card place-card"
       onMouseEnter={() => {
-        if (activeOffer !== id) {
-          setActiveOffer(id);
-          onOffersListCardHover(id);
+        if (activeOffer?.id !== id) {
+          updateState(offer);
         }
       }}
       onMouseLeave={() => {
-        setActiveOffer(null);
-        onOffersListCardHover(null);
+        updateState(null);
       }}
     >
       <div className={isPremium ? 'place-card__mark' : 'visually-hidden'}>

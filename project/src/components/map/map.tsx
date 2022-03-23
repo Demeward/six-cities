@@ -1,12 +1,12 @@
 import {useRef, useEffect} from 'react';
 import {Icon, Marker} from 'leaflet';
 import useMap from '../../hooks/useMap';
-import {Offer} from '../../types/offer';
+import {Offer, OfferType} from '../../types/offer';
 import 'leaflet/dist/leaflet.css';
 
 type MapProps = {
-  offers: Offer[];
-  activeOffer: Offer | undefined;
+  offers: OfferType;
+  activeOffer: Offer | null;
 };
 
 const defaultCustomIcon = new Icon({

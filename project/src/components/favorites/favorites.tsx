@@ -1,11 +1,20 @@
-import FavoritesList from '../favorites-list/favorites-list';
-import {Offer} from '../../types/offer';
+import FavoritesLocations from '../favorites-locations/favorites-locations';
+import {State} from '../../types/state';
+import {connect, ConnectedProps} from 'react-redux';
+import NoFavorites from '../no-favorites-offers/no-favorites-offers';
 
-type FavoritesOffers = {
-  offers: Offer[]
-}
+const mapStateToProps = ({offers}: State) => ({
+  offers,
+});
 
-function Favorites({offers}: FavoritesOffers): JSX.Element {
+const connector = connect(mapStateToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+function Favorites({offers}: PropsFromRedux): JSX.Element {
+
+  const favoriteOffers = offers.filter((offer) => offer.isFavorite);
+
   return (
     <div className="page">
       <header className="header">
@@ -36,25 +45,11 @@ function Favorites({offers}: FavoritesOffers): JSX.Element {
         </div>
       </header>
 
-      <main className="page__main page__main--favorites">
+      <main className={`page__main page__main--favorites ${offers.length === 0 ? 'page__main--favorites-empty': ''}`}>
         <div className="page__favorites-container container">
-          <section className="favorites">
-            <h1 className="favorites__title">Saved listing</h1>
-            <ul className="favorites__list">
-              <li className="favorites__locations-items">
-                <div className="favorites__locations locations locations--current">
-                  <div className="locations__item">
-                    <a className="locations__item-link" href="#">
-                      <span>Amsterdam</span>
-                    </a>
-                  </div>
-                </div>
-                <div className="favorites__places">
-                  <FavoritesList offers={offers} />
-                </div>
-              </li>
-            </ul>
-          </section>
+          {favoriteOffers !== null
+            ? <FavoritesLocations offers={favoriteOffers} />
+            : <NoFavorites />}
         </div>
       </main>
       <footer className="footer container">
@@ -66,4 +61,4 @@ function Favorites({offers}: FavoritesOffers): JSX.Element {
   );
 }
 
-export default Favorites;
+export default connector(Favorites);

@@ -7,27 +7,34 @@ import PrivateRoute from '../private-route/private-route';
 import PropertyRoute from '../property-route/property-route';
 import { BrowserRouter, Route, Routes} from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../../const';
-import {Offer} from '../../types/offer';
+import {State} from '../../types/state';
+// import {Offer} from '../../types/offer';
+import {connect, ConnectedProps} from 'react-redux';
 
-type AppOffersCount = {
-  offers: Offer[],
-}
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
-function App({ offers }: AppOffersCount): JSX.Element {
+const mapStateToProps = ({offers}: State) => ({
+  offers,
+});
+
+const connector = connect(mapStateToProps);
+
+function App(props: PropsFromRedux): JSX.Element {
+  // const {offers} = props;
   return (
     <BrowserRouter>
       <Routes>
-        <Route path={AppRoute.Main} element={<MainPage offers={offers}/>}/>
+        <Route path={AppRoute.Main} element={<MainPage />}/>
         <Route
           path={'offer/:id'}
-          element={<PropertyRoute offers={offers}/>}
+          element={<PropertyRoute />}
         />
         <Route path={AppRoute.Login} element={<Login/>}/>
         <Route
           path={AppRoute.Favorites}
           element={
             <PrivateRoute authorizationStatus={AuthorizationStatus.Auth}>
-              <Favorites offers={offers}/>
+              <Favorites />
             </PrivateRoute>
           }
         />
@@ -37,4 +44,5 @@ function App({ offers }: AppOffersCount): JSX.Element {
   );
 }
 
-export default App;
+export {App};
+export default connector(App);

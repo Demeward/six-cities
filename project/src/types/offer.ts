@@ -33,10 +33,11 @@ export type User = {
   name: string
 }
 
-export type OfferType = {
-  offer: Offer | undefined;
- }
+export type OfferType = Offer[] | [];
 
+export type CityType = string;
+
+export type SortingType = string;
 
 export type Comment = {
   comment: string,
