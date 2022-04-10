@@ -1,0 +1,76 @@
+import { ThunkActionResult } from '../types/action';
+import { APIRoute, AuthorizationStatus, AppRoute, toClientOffers, toClientOffer, toClientAuthInfo, toClientReviews } from '../const';
+import { fillOffersList, fillOffer, fillNearbyList, fillReviews, requireAuthorization, requireLogout, redirectToRoute } from './action';
+import { AuthData } from '../types/auth';
+import { ServerOffer, ServerComment, CommentPost } from '../types/offer';
+import { UserServerData } from '../types/auth';
+import { dropToken, saveToken } from '../services/token';
+import { dropEmail, saveEmail } from '../services/email';
+import { AxiosResponse } from 'axios';
+
+export const fetchOffersAction = (): ThunkActionResult =>
+  async (dispatch, _getState, api): Promise<void> => {
+    const { data } = await api.get<ServerOffer[]>(APIRoute.Offers);
+    dispatch(fillOffersList(toClientOffers(data)));
+  };
+
+export const fetchNearbyOffersAction = (id: number): ThunkActionResult =>
+  async (dispatch, _getState, api): Promise<void> => {
+    const { data } = await api.get<ServerOffer[]>(`${APIRoute.Offers}/${id}/nearby`);
+    dispatch(fillNearbyList(toClientOffers(data)));
+  };
+
+
+export const fetchOfferAction = (id: number): ThunkActionResult =>
+  async (dispatch, _getState, api): Promise<void> => {
+    const { data } = await api.get<ServerOffer>(`${APIRoute.Offers}/${id}`);
+    dispatch(fillOffer(toClientOffer(data)));
+  };
+
+export const fetchReviewsAction = (id: number): ThunkActionResult =>
+  async (dispatch, _getState, api): Promise<void> => {
+    const { data } = await api.get<ServerComment[]>(`${APIRoute.Comments}/${id}`);
+    // eslint-disable-next-line no-console
+    console.log(data);
+    dispatch(fillReviews(toClientReviews(data)));
+  };
+
+export const checkAuthAction = (): ThunkActionResult =>
+  async (dispatch, _getState, api) => {
+    await api.get(APIRoute.Login)
+      .then((response: AxiosResponse<UserServerData>) => {
+        response.data === undefined
+          ? dispatch(requireAuthorization(AuthorizationStatus.NotAuth))
+          : dispatch(requireAuthorization(AuthorizationStatus.Auth));
+      });
+  };
+
+export const loginAction = ({ login: email, password }: AuthData): ThunkActionResult =>
+  async (dispatch, _getState, api) => {
+    const { data } = await api.post<UserServerData>(APIRoute.Login, { email, password });
+    // eslint-disable-next-line no-console
+    console.log(data);
+    const adaptedAuthInfo = toClientAuthInfo(data);
+    // eslint-disable-next-line no-console
+    console.log(adaptedAuthInfo);
+    saveToken(adaptedAuthInfo.token);
+    saveEmail(adaptedAuthInfo.email);
+    dispatch(requireAuthorization(AuthorizationStatus.Auth));
+    dispatch(redirectToRoute(AppRoute.Main));
+  };
+
+export const logoutAction = (): ThunkActionResult =>
+  async (dispatch, _getState, api) => {
+    api.delete(APIRoute.Logout);
+    dropToken();
+    dropEmail();
+    dispatch(requireLogout());
+  };
+
+export const postReviewAction = ({comment, rating, id}:CommentPost):ThunkActionResult =>
+  async (dispatch, _getState, api) => {
+    const {data} = await api.post<ServerComment[]>(`${APIRoute.Comments}/${id}`, {comment, rating});
+    dispatch(fillReviews(
+      toClientReviews(data)),
+    );
+  };
