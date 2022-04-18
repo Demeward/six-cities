@@ -32,10 +32,20 @@ export const fillReviews = (reviews: Comment[]) => ({
   payload: reviews,
 } as const);
 
-export const resetMainScreen = () => ({
-  type: ActionType.ResetMainScreen,
+export const fillFavorites = (offersList: Offer[]) => ({
+  type: ActionType.FillFavorites,
+  payload: offersList,
 } as const);
 
+export const updateOffer = (offer: Offer) => ({
+  type: ActionType.UpdateOffer,
+  payload: offer,
+} as const);
+
+export const removeFromFavorites = (id: number) => ({
+  type: ActionType.RemoveFromFavorites,
+  payload: id,
+} as const);
 
 export const  requireAuthorization = (authStatus: AuthorizationStatus) => ({
   type: ActionType.RequireAuthorization,

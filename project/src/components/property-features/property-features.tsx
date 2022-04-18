@@ -1,3 +1,5 @@
+import React from 'react';
+
 
 type PropertyType = {
   goods: string[],
@@ -11,4 +13,4 @@ function PropertyFeatures({goods}: PropertyType): JSX.Element {
   );
 }
 
-export default PropertyFeatures;
+export default React.memo(PropertyFeatures);

@@ -1,6 +1,6 @@
 import { ThunkActionResult } from '../types/action';
 import { APIRoute, AuthorizationStatus, AppRoute, toClientOffers, toClientOffer, toClientAuthInfo, toClientReviews } from '../const';
-import { fillOffersList, fillOffer, fillNearbyList, fillReviews, requireAuthorization, requireLogout, redirectToRoute } from './action';
+import { fillOffersList, fillOffer, fillNearbyList, fillReviews, requireAuthorization, requireLogout, redirectToRoute, fillFavorites, updateOffer, removeFromFavorites } from './action';
 import { AuthData } from '../types/auth';
 import { ServerOffer, ServerComment, CommentPost } from '../types/offer';
 import { UserServerData } from '../types/auth';
@@ -33,6 +33,25 @@ export const fetchReviewsAction = (id: number): ThunkActionResult =>
     // eslint-disable-next-line no-console
     console.log(data);
     dispatch(fillReviews(toClientReviews(data)));
+  };
+
+export const fetchFavoritesAction = (): ThunkActionResult =>
+  async (dispatch, _getState, api) => {
+    const {data} = await api.get<ServerOffer[]>(APIRoute.Favorite);
+    dispatch(fillFavorites(toClientOffers(data)));
+  };
+
+export const addToFavoritesAction = (id: number): ThunkActionResult =>
+  async (dispatch, _getState, api) => {
+    const {data} = await api.post<ServerOffer>(`${APIRoute.Favorite}/${id}/1`);
+    dispatch(updateOffer(toClientOffer(data)));
+  };
+
+export const removeFromFavoritesAction = (id:number): ThunkActionResult =>
+  async (dispatch, _getState, api) => {
+    const {data} = await api.post<ServerOffer>(`${APIRoute.Favorite}/${id}/0`);
+    dispatch(updateOffer(toClientOffer(data)));
+    dispatch(removeFromFavorites(id));
   };
 
 export const checkAuthAction = (): ThunkActionResult =>

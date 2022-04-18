@@ -1,3 +1,4 @@
+import React from 'react';
 
 type PropertyType = {
   images: string[],
@@ -11,4 +12,4 @@ function PropertyPhotos({images}: PropertyType): JSX.Element {
   );
 }
 
-export default PropertyPhotos;
+export default React.memo(PropertyPhotos);

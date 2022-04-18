@@ -6,9 +6,10 @@ import { postReviewAction } from '../../store/api-actions';
 import { State } from '../../types/state';
 import { ThunkAppDispatch } from '../../types/action';
 import { CommentPost } from '../../types/offer';
+import {getOffer} from '../../store/property-data/selectors';
 
-const mapStateToProps = ({ offer }: State) => ({
-  offer,
+const mapStateToProps = (state: State) => ({
+  offer: getOffer(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({

@@ -1,26 +1,23 @@
 import Header from '../header/header';
 import ReviewForm from '../review-form/review-form';
 import ReviewsList from '../reviews-list/reviews-list';
-// import { Offer, OfferType, PropertyOffer } from '../../types/offer';
 import Map from '../map/map';
 import Loader from '../loader/loader';
 import { AuthorizationStatus } from '../../const';
 import PropertyPhotos from '../property-photos/property-photos';
 import PropertyFeatures from '../property-features/property-features';
 import NearbyOffers from '../nearby-offers/nearby-offers';
-// import {Actions, ThunkAppDispatch} from '../../types/action';
-// import {Dispatch} from '@reduxjs/toolkit';
-// import {fetchOfferAction, fetchNearbyOffersAction, fetchReviewsAction} from '../../store/api-actions';
-// import {fillOffer} from '../../store/action';
 import { connect, ConnectedProps } from 'react-redux';
 import { State } from '../../types/state';
+import {getOffer, getNearbyOffers, getReviews} from '../../store/property-data/selectors';
+import {getAuthorizationStatus} from '../../store/user-data/selectors';
 
 
-const mapStateToProps = ({ offer, nearbyOffers, reviews, authorizationStatus }: State) => ({
-  offer,
-  nearbyOffers,
-  authorizationStatus,
-  reviews,
+const mapStateToProps = (state: State) => ({
+  offer: getOffer(state),
+  nearbyOffers: getNearbyOffers(state),
+  authorizationStatus: getAuthorizationStatus(state),
+  reviews: getReviews(state),
 });
 
 const connector = connect(mapStateToProps);

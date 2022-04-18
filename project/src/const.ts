@@ -145,7 +145,8 @@ enum APIRoute {
   Room = '/hotel',
   Login = '/login',
   Logout = '/logout',
-  Comments = '/comments'
+  Comments = '/comments',
+  Favorite = '/favorite',
 }
 
 export { AppRoute, AuthorizationStatus, City, Rating, Sorting, APIRoute, filterOffers, sortOffers, toClientOffers, toClientOffer, toClientAuthInfo, toClientReviews, getRandomCity };

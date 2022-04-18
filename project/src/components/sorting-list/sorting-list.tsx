@@ -1,4 +1,4 @@
-
+import React from 'react';
 import { useState } from 'react';
 import { Sorting } from '../../const';
 
@@ -31,4 +31,4 @@ function SortingList(props: SortingProps): JSX.Element {
   );
 }
 
-export default SortingList;
+export default React.memo(SortingList, (prevProps, nextProps) => prevProps.activeSorting === nextProps.activeSorting);

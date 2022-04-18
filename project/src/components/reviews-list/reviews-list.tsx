@@ -1,5 +1,6 @@
 import {Comment} from '../../types/offer';
 import Review from '../review/review';
+import React from 'react';
 
 type ReviewsListProps = {
   reviews: Comment[];
@@ -13,4 +14,4 @@ function ReviewsList({reviews}: ReviewsListProps): JSX.Element {
   );
 }
 
-export default ReviewsList;
+export default React.memo(ReviewsList, (prevProps, nextProps) => prevProps.reviews === nextProps.reviews);

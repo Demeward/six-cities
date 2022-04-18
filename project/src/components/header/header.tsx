@@ -1,12 +1,14 @@
+import React from 'react';
 import Logo from '../logo/logo';
 import { State } from '../../types/state';
 import { connect, ConnectedProps } from 'react-redux';
 import { AuthorizationStatus } from '../../const';
 import LoggedIn from '../logged-in/logged-in';
 import LoggedOut from '../logged-out/logged-out';
+import {getAuthorizationStatus} from '../../store/user-data/selectors';
 
-const mapStateToProps = ({ authorizationStatus }: State) => ({
-  authorizationStatus,
+const mapStateToProps = (state: State) => ({
+  authorizationStatus: getAuthorizationStatus(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -36,4 +38,5 @@ function Header(props: PropsFromRedux): JSX.Element {
   );
 }
 
-export default connector(Header);
+export default connector(React.memo(Header,
+  (prevProps, nextProps) => prevProps.authorizationStatus === nextProps.authorizationStatus));

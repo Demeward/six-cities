@@ -8,11 +8,13 @@ import {State} from '../../types/state';
 import {changeCity} from '../../store/action';
 import {useNavigate, Navigate} from 'react-router-dom';
 import {CityType} from '../../types/offer';
+import {getCity} from '../../store/main-data/selectors';
+import {getAuthorizationStatus} from '../../store/user-data/selectors';
 
 
-const mapStateToProps = ({city, authorizationStatus}: State) => ({
-  city,
-  authorizationStatus,
+const mapStateToProps = (state: State) => ({
+  city: getCity(state),
+  authorizationStatus: getAuthorizationStatus(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({

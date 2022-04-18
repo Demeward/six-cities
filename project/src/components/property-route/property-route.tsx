@@ -1,9 +1,7 @@
 import { useParams } from 'react-router-dom';
 import NoPage from '../no-page/no-page';
 import PropertyScreen from '../property-screen/property-screen';
-// import {State} from '../../types/state';
 import {OfferType} from '../../types/offer';
-// import {connect, ConnectedProps} from 'react-redux';
 
 type OffersProps = {
   offers: OfferType,

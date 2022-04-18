@@ -1,4 +1,5 @@
 import { City } from '../../const';
+import React from 'react';
 
 
 type CitiesType = {
@@ -27,4 +28,4 @@ function CitiesList(props: CitiesType): JSX.Element {
   );
 }
 
-export default CitiesList;
+export default React.memo(CitiesList, (prevProps, nextProps) => prevProps.activeCity === nextProps.activeCity);

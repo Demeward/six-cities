@@ -2,9 +2,10 @@ import { Navigate, RouteProps } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import {State} from '../../types/state';
 import {connect, ConnectedProps} from 'react-redux';
+import {getAuthorizationStatus} from '../../store/user-data/selectors';
 
-const mapStateToProps = ({authorizationStatus}:State) => ({
-  authorizationStatus,
+const mapStateToProps = (state:State) => ({
+  authorizationStatus: getAuthorizationStatus(state),
 });
 
 const connector = connect(mapStateToProps);

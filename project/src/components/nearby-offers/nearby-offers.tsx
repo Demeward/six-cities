@@ -1,4 +1,4 @@
-
+import React from 'react';
 import NearbyOfferCard from '../nearby-offer/nearby-offer';
 import { OfferType } from '../../types/offer';
 
@@ -19,4 +19,4 @@ function NearbyOffers({ nearbyOffers }: NearbyType): JSX.Element {
   );
 }
 
-export default NearbyOffers;
+export default React.memo(NearbyOffers, (prevProps, nextProps) => prevProps.nearbyOffers === nextProps.nearbyOffers);
