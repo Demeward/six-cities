@@ -1,26 +1,16 @@
-import { Navigate, RouteProps } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../../const';
-import {State} from '../../types/state';
-import {connect, ConnectedProps} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {getAuthorizationStatus} from '../../store/user-data/selectors';
 
-const mapStateToProps = (state:State) => ({
-  authorizationStatus: getAuthorizationStatus(state),
-});
-
-const connector = connect(mapStateToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectedComponentProps = PropsFromRedux & PrivateRouteProps;
-
-type PrivateRouteProps = RouteProps & {
+type PrivateRouteProps =  {
   children: JSX.Element;
-  authorizationStatus: AuthorizationStatus;
 }
 
-function PrivateRoute(props: ConnectedComponentProps): JSX.Element {
-  const { children, authorizationStatus } = props;
+function PrivateRoute(props: PrivateRouteProps): JSX.Element {
+  const authorizationStatus = useSelector(getAuthorizationStatus);
+  const { children } = props;
   return authorizationStatus === AuthorizationStatus.Auth ? children : <Navigate to={AppRoute.Login} />;
 }
 
-export default connector(PrivateRoute);
+export default PrivateRoute;

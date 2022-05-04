@@ -1,26 +1,18 @@
 import {Offer} from '../../types/offer';
 import {Link} from 'react-router-dom';
-import {ThunkAppDispatch} from '../../types/action';
 import {removeFromFavoritesAction} from '../../store/api-actions';
-import {connect, ConnectedProps} from 'react-redux';
+import {useDispatch} from 'react-redux';
 
 type OfferTypeProps = {
   offer: Offer,
 }
 
-const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
-  removeOfferFromFavorites (id: number) {
+function FavoriteOffer({offer}:OfferTypeProps): JSX.Element {
+  const dispatch = useDispatch();
+  const removeOfferFromFavorites = (id: number) => {
     dispatch(removeFromFavoritesAction(id));
-  },
-});
+  };
 
-const connector = connect(null, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectedComponentProps = OfferTypeProps & PropsFromRedux;
-
-
-function FavoriteOffer({offer, removeOfferFromFavorites}:ConnectedComponentProps): JSX.Element {
   const {id, isPremium, previewImage, price, isFavorite, title, type, rating} = offer;
 
   return (
@@ -66,5 +58,4 @@ function FavoriteOffer({offer, removeOfferFromFavorites}:ConnectedComponentProps
   );
 }
 
-export {FavoriteOffer};
-export default connector(FavoriteOffer);
+export default FavoriteOffer;

@@ -1,13 +1,11 @@
 import React from 'react';
 import NearbyOfferCard from '../nearby-offer/nearby-offer';
-import { OfferType } from '../../types/offer';
+import {useSelector} from 'react-redux';
+import {getNearbyOffers} from '../../store/property-data/selectors';
 
 
-type NearbyType = {
-  nearbyOffers: OfferType,
-}
-
-function NearbyOffers({ nearbyOffers }: NearbyType): JSX.Element {
+function NearbyOffers():JSX.Element {
+  const nearbyOffers = useSelector(getNearbyOffers);
 
   return (
     <section className="near-places places">
@@ -19,4 +17,4 @@ function NearbyOffers({ nearbyOffers }: NearbyType): JSX.Element {
   );
 }
 
-export default React.memo(NearbyOffers, (prevProps, nextProps) => prevProps.nearbyOffers === nextProps.nearbyOffers);
+export default React.memo(NearbyOffers);

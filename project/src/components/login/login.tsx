@@ -1,43 +1,32 @@
-import {ThunkAppDispatch} from '../../types/action';
 import {useRef, FormEvent} from 'react';
+import {useSelector} from 'react-redux';
 import {AuthData} from '../../types/auth';
+import Logo from '../logo/logo';
 import {loginAction} from '../../store/api-actions';
-import {connect, ConnectedProps} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {AppRoute, AuthorizationStatus, getRandomCity} from '../../const';
-import {State} from '../../types/state';
 import {changeCity} from '../../store/action';
 import {useNavigate, Navigate} from 'react-router-dom';
 import {CityType} from '../../types/offer';
-import {getCity} from '../../store/main-data/selectors';
 import {getAuthorizationStatus} from '../../store/user-data/selectors';
 
 
-const mapStateToProps = (state: State) => ({
-  city: getCity(state),
-  authorizationStatus: getAuthorizationStatus(state),
-});
-
-const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
-  onSubmit(authData: AuthData) {
-    dispatch(loginAction(authData));
-  },
-  onChangeCity(city: CityType) {
-    dispatch(changeCity(city));
-  },
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-
-function Login(props: PropsFromRedux): JSX.Element {
-  const {onSubmit, onChangeCity, authorizationStatus} = props;
-
+function Login():JSX.Element {
   const randomCity = getRandomCity();
+  const authorizationStatus = useSelector(getAuthorizationStatus);
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
   const history = useNavigate();
+
+  const dispatch = useDispatch();
+
+  const onSubmit = (authData: AuthData) => {
+    dispatch(loginAction(authData));
+  };
+
+  const onChangeCity = (city: CityType) => {
+    dispatch(changeCity(city));
+  };
 
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
@@ -58,11 +47,7 @@ function Login(props: PropsFromRedux): JSX.Element {
       <header className="header">
         <div className="container">
           <div className="header__wrapper">
-            <div className="header__left">
-              <a className="header__logo-link" href="main.html">
-                <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41" />
-              </a>
-            </div>
+            <Logo />
           </div>
         </div>
       </header>
@@ -100,4 +85,4 @@ function Login(props: PropsFromRedux): JSX.Element {
   );
 }
 
-export default connector(Login);
+export default Login;

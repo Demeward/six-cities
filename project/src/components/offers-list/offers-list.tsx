@@ -1,36 +1,27 @@
 import { CityType, Offer } from '../../types/offer';
 import OfferCard from '../offer-card/offer-card';
 import SortingList from '../sorting-list/sorting-list';
-import { State } from '../../types/state';
 import { sortOffers } from '../../const';
-import { connect, ConnectedProps } from 'react-redux';
-import { Dispatch } from '@reduxjs/toolkit';
-import { Actions } from '../../types/action';
+import {useDispatch, useSelector} from 'react-redux';
 import { changeSorting } from '../../store/action';
 import {getSorting} from '../../store/main-data/selectors';
 
-type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const mapStateToProps = (state: State) => ({
-  activeSorting: getSorting(state),
-});
-
-const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
-  onChangeSorting(sorting: string) {
-    dispatch(changeSorting(sorting));
-  },
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type MainOffers = PropsFromRedux & {
+type MainOffers = {
   city: CityType;
   offers: Offer[];
   onActiveOfferChange: (value: Offer | null) => void;
 }
 
 function OffersList(props: MainOffers): JSX.Element {
-  const { offers, city, activeSorting, onChangeSorting, onActiveOfferChange } = props;
+  const activeSorting = useSelector(getSorting);
+  const { offers, city, onActiveOfferChange } = props;
+  const dispatch = useDispatch();
+
+  const onChangeSorting = (sorting: string) => {
+    dispatch(changeSorting(sorting));
+  };
+
 
   return (
     <section className="cities__places places">
@@ -44,4 +35,4 @@ function OffersList(props: MainOffers): JSX.Element {
   );
 }
 
-export default connector(OffersList);
+export default OffersList;

@@ -1,30 +1,21 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import RatingStar from '../rating-star/rating-star';
 import { Rating } from '../../const';
 import { postReviewAction } from '../../store/api-actions';
-import { State } from '../../types/state';
-import { ThunkAppDispatch } from '../../types/action';
 import { CommentPost } from '../../types/offer';
 import {getOffer} from '../../store/property-data/selectors';
 
-const mapStateToProps = (state: State) => ({
-  offer: getOffer(state),
-});
 
-const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
-  onSubmit({ comment, rating, id }: CommentPost) {
-    dispatch(postReviewAction({ comment, rating, id }));
-  },
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-function ReviewForm({ offer, onSubmit }: PropsFromRedux): JSX.Element {
+function ReviewForm():JSX.Element {
+  const offer = useSelector(getOffer);
+  const dispatch = useDispatch();
   const [reviewMessage, setReviewMessage] = useState<string>('');
   const [reviewRating, setReviewRating] = useState<number>(0);
+
+  const onSubmit = ({comment, rating, id}: CommentPost) => {
+    dispatch(postReviewAction({comment, rating, id}));
+  };
 
   const handleRatingChange = (evt: ChangeEvent<HTMLInputElement>) =>
     setReviewRating(parseInt(evt.target.value, 10));
@@ -42,8 +33,6 @@ function ReviewForm({ offer, onSubmit }: PropsFromRedux): JSX.Element {
 
   const isReviewValid = (comment:string, rating: number):boolean => (comment.length > 50 && comment.length < 300) && rating !== 0;
 
-  // eslint-disable-next-line no-console
-  console.log(reviewMessage, reviewRating);
   return (
     <form className="reviews__form form" action="#" method="post"
       onSubmit={handleSubmit}
@@ -75,4 +64,4 @@ function ReviewForm({ offer, onSubmit }: PropsFromRedux): JSX.Element {
   );
 }
 
-export default connector(ReviewForm);
+export default ReviewForm;

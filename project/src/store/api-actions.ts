@@ -24,6 +24,8 @@ export const fetchNearbyOffersAction = (id: number): ThunkActionResult =>
 export const fetchOfferAction = (id: number): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     const { data } = await api.get<ServerOffer>(`${APIRoute.Offers}/${id}`);
+    // eslint-disable-next-line no-console
+    console.log(data);
     dispatch(fillOffer(toClientOffer(data)));
   };
 
@@ -76,6 +78,7 @@ export const loginAction = ({ login: email, password }: AuthData): ThunkActionRe
     saveEmail(adaptedAuthInfo.email);
     dispatch(requireAuthorization(AuthorizationStatus.Auth));
     dispatch(redirectToRoute(AppRoute.Main));
+    dispatch(fetchOffersAction());
   };
 
 export const logoutAction = (): ThunkActionResult =>
@@ -84,6 +87,7 @@ export const logoutAction = (): ThunkActionResult =>
     dropToken();
     dropEmail();
     dispatch(requireLogout());
+    dispatch(fetchOffersAction());
   };
 
 export const postReviewAction = ({comment, rating, id}:CommentPost):ThunkActionResult =>

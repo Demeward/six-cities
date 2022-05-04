@@ -1,22 +1,15 @@
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../const';
 import { getEmail } from '../../services/email';
-import {ThunkAppDispatch} from '../../types/action';
 import {logoutAction} from '../../store/api-actions';
-import {connect, ConnectedProps} from 'react-redux';
+import {useDispatch} from 'react-redux';
 
-const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
-  onLogout() {
+
+function LoggedIn():JSX.Element {
+  const dispatch = useDispatch();
+  const onLogout = () => {
     dispatch(logoutAction());
-  },
-});
-
-const connector = connect(null, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-
-function LoggedIn(props: PropsFromRedux): JSX.Element {
-  const {onLogout} = props;
+  };
 
   return (
     <>
@@ -42,4 +35,4 @@ function LoggedIn(props: PropsFromRedux): JSX.Element {
   );
 }
 
-export default connector(LoggedIn);
+export default LoggedIn;

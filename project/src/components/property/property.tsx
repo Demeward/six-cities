@@ -3,36 +3,46 @@ import ReviewForm from '../review-form/review-form';
 import ReviewsList from '../reviews-list/reviews-list';
 import Map from '../map/map';
 import Loader from '../loader/loader';
-import { AuthorizationStatus } from '../../const';
+import { AppRoute, AuthorizationStatus } from '../../const';
 import PropertyPhotos from '../property-photos/property-photos';
 import PropertyFeatures from '../property-features/property-features';
 import NearbyOffers from '../nearby-offers/nearby-offers';
-import { connect, ConnectedProps } from 'react-redux';
-import { State } from '../../types/state';
-import {getOffer, getNearbyOffers, getReviews} from '../../store/property-data/selectors';
-import {getAuthorizationStatus} from '../../store/user-data/selectors';
+import { useDispatch, useSelector } from 'react-redux';
+import { getOffer, getNearbyOffers, getReviews } from '../../store/property-data/selectors';
+import { getAuthorizationStatus } from '../../store/user-data/selectors';
+import { addToFavoritesAction, checkAuthAction, removeFromFavoritesAction } from '../../store/api-actions';
+import { redirectToRoute } from '../../store/action';
 
 
-const mapStateToProps = (state: State) => ({
-  offer: getOffer(state),
-  nearbyOffers: getNearbyOffers(state),
-  authorizationStatus: getAuthorizationStatus(state),
-  reviews: getReviews(state),
-});
+function Property(): JSX.Element {
+  const offer = useSelector(getOffer);
+  const reviews = useSelector(getReviews);
+  const nearbyOffers = useSelector(getNearbyOffers);
+  const authorizationStatus = useSelector(getAuthorizationStatus);
+  const dispatch = useDispatch();
 
-const connector = connect(mapStateToProps);
+  const addToFavorites = (id: number) => {
+    dispatch(addToFavoritesAction(id));
+  };
 
-type PropsFromRedux = ConnectedProps<typeof connector>;
+  const removeFromFavorites = (id: number) => {
+    dispatch(removeFromFavoritesAction(id));
+  };
 
-function Property(props: PropsFromRedux): JSX.Element {
-  const { offer, nearbyOffers, reviews, authorizationStatus } = props;
+  const redirectToAuthScreen = () => {
+    dispatch(redirectToRoute(AppRoute.Login));
+  };
+
+  const checkAuthorization = () => {
+    dispatch(checkAuthAction());
+  };
 
   if (offer === null) {
     return <Loader />;
   }
 
   const offersMap = [...nearbyOffers, offer];
-  const { isPremium, rating, price, isFavorite, title, type, bedrooms, description, goods, host, maxAdults, images } = offer;
+  const { id, isPremium, rating, price, isFavorite, title, type, bedrooms, description, goods, host, maxAdults, images } = offer;
 
   return (
     <>
@@ -54,7 +64,19 @@ function Property(props: PropsFromRedux): JSX.Element {
                 <h1 className="property__name">
                   {title}
                 </h1>
-                <button className={`property__bookmark-button ${isFavorite ? 'property__bookmark-button--active' : ''} button`} type="button">
+                <button className={`property__bookmark-button ${isFavorite ? 'property__bookmark-button--active' : ''} button`} type="button"
+                  onClick={(evt) => {
+                    evt.preventDefault();
+                    checkAuthorization();
+                    if (authorizationStatus !== AuthorizationStatus.Auth) {
+                      return redirectToAuthScreen();
+                    }
+                    if (isFavorite) {
+                      return removeFromFavorites(id);
+                    }
+                    return addToFavorites(id);
+                  }}
+                >
                   <svg className="property__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>
                   </svg>
@@ -63,7 +85,7 @@ function Property(props: PropsFromRedux): JSX.Element {
               </div>
               <div className="property__rating rating">
                 <div className="property__stars rating__stars">
-                  <span style={{width: `${rating * 20}%`}}></span>
+                  <span style={{ width: `${rating * 20}%` }}></span>
                   <span className="visually-hidden">Rating</span>
                 </div>
                 <span className="property__rating-value rating__value">{rating}</span>
@@ -122,11 +144,11 @@ function Property(props: PropsFromRedux): JSX.Element {
           </section>
         </section>
         <div className="container">
-          <NearbyOffers nearbyOffers={nearbyOffers} />
+          <NearbyOffers />
         </div>
       </main>
     </>
   );
 }
 
-export default connector(Property);
+export default Property;

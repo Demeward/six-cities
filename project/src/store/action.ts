@@ -1,62 +1,84 @@
 import {ActionType} from '../types/action';
-import {Offer, Comment} from '../types/offer';
+import {Offer, CityType, Comment} from '../types/offer';
 import {AppRoute, AuthorizationStatus} from '../const';
+import {createAction} from '@reduxjs/toolkit';
 
-export const changeCity = (city: string) => ({
-  type: ActionType.ChangeCity,
-  payload: city,
-} as const);
+export const changeCity = createAction(
+  ActionType.ChangeCity,
+  (city: CityType) => ({
+    payload: city,
+  }),
+);
 
-export const changeSorting = (sorting: string) => ({
-  type: ActionType.ChangeSorting,
-  payload: sorting,
-} as const);
+export const changeSorting = createAction(
+  ActionType.ChangeSorting,
+  (sorting: string)  => ({
+    payload: sorting,
+  }),
+);
 
-export const fillOffersList = (offersList: Offer[]) => ({
-  type: ActionType.FillOffersList,
-  payload: offersList,
-} as const);
+export const fillOffersList = createAction(
+  ActionType.FillOffersList,
+  (offerList: Offer[]) => ({
+    payload: offerList,
+  }),
+);
 
-export const fillNearbyList = (offers: Offer[]) => ({
-  type: ActionType.FillNearbyList,
-  payload: offers,
-} as const);
+export const fillNearbyList = createAction(
+  ActionType.FillNearbyList,
+  (offersList: Offer[]) => ({
+    payload: offersList,
+  }),
+);
 
-export const fillOffer = (offer: Offer) => ({
-  type: ActionType.FillOffer,
-  payload: offer,
-} as const);
+export const fillOffer = createAction(
+  ActionType.FillOffer,
+  (offer: Offer) => ({
+    payload: offer,
+  }),
+);
 
-export const fillReviews = (reviews: Comment[]) => ({
-  type: ActionType.FillReviews,
-  payload: reviews,
-} as const);
+export const fillReviews = createAction(
+  ActionType.FillReviews,
+  (reviewsList: Comment[]) => ({
+    payload: reviewsList,
+  }),
+);
 
-export const fillFavorites = (offersList: Offer[]) => ({
-  type: ActionType.FillFavorites,
-  payload: offersList,
-} as const);
 
-export const updateOffer = (offer: Offer) => ({
-  type: ActionType.UpdateOffer,
-  payload: offer,
-} as const);
+export const fillFavorites = createAction(
+  ActionType.FillFavorites,
+  (offersList: Offer[]) => ({
+    payload: offersList,
+  }),
+);
 
-export const removeFromFavorites = (id: number) => ({
-  type: ActionType.RemoveFromFavorites,
-  payload: id,
-} as const);
+export const updateOffer = createAction(
+  ActionType.UpdateOffer,
+  (offer: Offer) => ({
+    payload: offer,
+  }),
+);
 
-export const  requireAuthorization = (authStatus: AuthorizationStatus) => ({
-  type: ActionType.RequireAuthorization,
-  payload: authStatus,
-} as const);
+export const removeFromFavorites = createAction(
+  ActionType.RemoveFromFavorites,
+  (id: number) => ({
+    payload: id,
+  }),
+);
 
-export const requireLogout = () => ({
-  type: ActionType.RequireLogout,
-} as const);
+export const requireAuthorization = createAction(
+  ActionType.RequireAuthorization,
+  (authStatus: AuthorizationStatus) => ({
+    payload: authStatus,
+  }),
+);
 
-export const redirectToRoute = (url: AppRoute) => ({
-  type: ActionType.RedirectToRoute,
-  payload: url,
-} as const);
+export const requireLogout = createAction(ActionType.RequireLogout);
+
+export const redirectToRoute = createAction(
+  ActionType.RedirectToRoute,
+  (url: AppRoute) => ({
+    payload: url,
+  }),
+);

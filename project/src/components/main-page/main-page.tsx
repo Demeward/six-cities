@@ -4,33 +4,21 @@ import Header from '../header/header';
 import CitiesList from '../cities-list/cities-list';
 import NoOffers from '../no-offers/no-offers';
 import Map from '../map/map';
-import { State } from '../../types/state';
-import { Dispatch } from '@reduxjs/toolkit';
-import { Actions } from '../../types/action';
-import { Offer } from '../../types/offer';
-import { connect, ConnectedProps } from 'react-redux';
+import { Offer, CityType } from '../../types/offer';
+import {useDispatch, useSelector} from 'react-redux';
 import { changeCity } from '../../store/action';
 import { filterOffers } from '../../const';
 import {getCity, getOffers} from '../../store/main-data/selectors';
 
-const mapStateToProps = (state: State) => ({
-  city: getCity(state),
-  offers: getOffers(state),
-});
 
-const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
-  onChangeCity(city: string) {
-    dispatch(changeCity(city));
-  },
-});
+function MainPage(): JSX.Element {
+  const city = useSelector(getCity);
+  const offers = useSelector(getOffers);
+  const dispatch = useDispatch();
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-function MainPage(props: PropsFromRedux): JSX.Element {
-
-  const { city, offers, onChangeCity } = props;
+  const onChangeCity = (cityName: CityType) => {
+    dispatch(changeCity(cityName));
+  };
   const [activeOffer, setActiveOffer] = useState<Offer | null>(null);
   const currentOffers = filterOffers(offers, city);
 
@@ -62,4 +50,4 @@ function MainPage(props: PropsFromRedux): JSX.Element {
   );
 }
 
-export default connector(MainPage);
+export default MainPage;

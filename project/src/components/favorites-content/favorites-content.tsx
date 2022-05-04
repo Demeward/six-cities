@@ -1,19 +1,11 @@
 import FavoritesLocations from '../favorites-locations/favorites-locations';
 import NoFavorites from '../no-favorites-offers/no-favorites-offers';
-import {State} from '../../types/state';
 import {getFavorites} from '../../store/favorites-data/selectors';
-import {connect, ConnectedProps} from 'react-redux';
+import {useSelector} from 'react-redux';
 
-const mapStateToProps = (state: State) => ({
-  favorites: getFavorites(state),
-});
 
-const connector = connect(mapStateToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-function FavoritesContent(props: PropsFromRedux):JSX.Element {
-  const {favorites} = props;
+function FavoritesContent():JSX.Element {
+  const favorites = useSelector(getFavorites);
 
   return (
     <main className={`page__main page__main--favorites ${favorites.length === 0 ? 'page__main--favorites-empty': ''}`}>
@@ -26,5 +18,4 @@ function FavoritesContent(props: PropsFromRedux):JSX.Element {
   );
 }
 
-export {FavoritesContent};
-export default connector(FavoritesContent);
+export default FavoritesContent;

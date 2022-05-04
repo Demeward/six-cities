@@ -1,25 +1,23 @@
 import {FavoritesData} from '../../types/state';
-import {Actions, ActionType} from '../../types/action';
+import {createReducer} from '@reduxjs/toolkit';
+import {fillFavorites, removeFromFavorites} from '../action';
 
 const initialState: FavoritesData = {
   favorites: [],
 };
 
-const favoritesData = (state = initialState, action: Actions): FavoritesData => {
-  let index = -1;
-  switch (action.type) {
-    case ActionType.FillFavorites:
-      return {...state, favorites: action.payload};
-    case ActionType.RemoveFromFavorites:
-      index = state.favorites.findIndex((offer) => offer.id === action.payload);
-      return {...state, favorites: [
+const favoritesData = createReducer(initialState, (builder) => {
+  builder.addCase(fillFavorites, (state, action) => {
+    state.favorites = action.payload;
+  })
+    .addCase(removeFromFavorites, (state, action) => {
+      const index = state.favorites.findIndex((offer) => offer.id === action.payload);
+
+      state.favorites = [
         ...state.favorites.slice(0, index),
         ...state.favorites.slice(index + 1),
-      ],
-      };
-    default:
-      return state;
-  }
-};
+      ];
+    });
+});
 
 export {favoritesData};

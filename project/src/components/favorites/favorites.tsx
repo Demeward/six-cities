@@ -1,20 +1,14 @@
 import Header from '../header/header';
-import {connect, ConnectedProps} from 'react-redux';
-import {ThunkAppDispatch} from '../../types/action';
+import {useDispatch} from 'react-redux';
 import FavoritesContent from '../favorites-content/favorites-content';
 import {fetchFavoritesAction} from '../../store/api-actions';
 
-const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
-  fetchFavoritesOffers() {
+
+function Favorites():JSX.Element {
+  const dispatch = useDispatch();
+  const fetchFavoritesOffers = () => {
     dispatch(fetchFavoritesAction());
-  },
-});
-
-const connector = connect(null, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-function Favorites({fetchFavoritesOffers}: PropsFromRedux): JSX.Element {
+  };
 
   fetchFavoritesOffers();
 
@@ -32,4 +26,4 @@ function Favorites({fetchFavoritesOffers}: PropsFromRedux): JSX.Element {
   );
 }
 
-export default connector(Favorites);
+export default Favorites;

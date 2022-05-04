@@ -1,44 +1,45 @@
 import Property from '../property/property';
 import { Offer } from '../../types/offer';
-import {Actions, ThunkAppDispatch} from '../../types/action';
-import {Dispatch} from '@reduxjs/toolkit';
+import { useEffect } from 'react';
 import {fetchOfferAction, fetchNearbyOffersAction, fetchReviewsAction} from '../../store/api-actions';
 import {fillOffer} from '../../store/action';
-import {connect, ConnectedProps} from 'react-redux';
+import {useDispatch} from 'react-redux';
 
 type PropertyScreenProps = {
-  offerId: number,
-  offer?: Offer,
+  offerId: number
+  offer?: Offer
 }
 
-const mapDispatchToProps = (dispatch: ThunkAppDispatch | Dispatch<Actions>) => ({
-  fetchOffer(id: number) {
-    (dispatch as ThunkAppDispatch)(fetchOfferAction(id));
-  },
-  fetchReviews(id: number) {
-    (dispatch as ThunkAppDispatch)(fetchReviewsAction(id));
-  },
-  fetchNearbyOffers(id: number) {
-    (dispatch as ThunkAppDispatch)(fetchNearbyOffersAction(id));
-  },
-  fillProperty(offer: Offer) {
-    (dispatch as Dispatch<Actions>)(fillOffer(offer));
-  },
-});
+function PropertyScreen(props: PropertyScreenProps):JSX.Element {
+  const dispatch = useDispatch();
 
-const connector = connect(null, mapDispatchToProps);
+  const fetchOffer = (id: number) => {
+    dispatch(fetchOfferAction(id));
+  };
 
-type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectedComponentProps = PropsFromRedux & PropertyScreenProps;
+  const fetchReviews = (id: number) => {
+    dispatch(fetchReviewsAction(id));
+  };
 
-function PropertyScreen(props: ConnectedComponentProps): JSX.Element {
-  const {fetchOffer, fetchReviews, fetchNearbyOffers, fillProperty, offer, offerId} = props;
+  const fetchNearbyOffers = (id: number) => {
+    dispatch(fetchNearbyOffersAction(id));
+  };
 
-  if (offer === undefined) {
-    fetchOffer(offerId);
-  } else {
-    fillProperty(offer);
-  }
+  const fillProperty = (offer: Offer) => {
+    dispatch(fillOffer(offer));
+  };
+  const {offer, offerId} = props;
+
+  // eslint-disable-next-line no-console
+  console.log(offer);
+
+  useEffect(() => {
+    if (offer === undefined) {
+      fetchOffer(offerId);
+    } else {
+      fillProperty(offer);
+    }
+  }, [offer, offerId]);
 
   fetchReviews(offerId);
   fetchNearbyOffers(offerId);
@@ -50,4 +51,4 @@ function PropertyScreen(props: ConnectedComponentProps): JSX.Element {
   );
 }
 
-export default connector(PropertyScreen);
+export default PropertyScreen;

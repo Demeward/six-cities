@@ -1,9 +1,7 @@
 import { Offer, CityType } from '../../types/offer';
 import FavoritesList from '../favorites-list/favorites-list';
-import {Dispatch} from '@reduxjs/toolkit';
-import {Actions} from '../../types/action';
 import {changeCity, redirectToRoute} from '../../store/action';
-import {connect, ConnectedProps} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {AppRoute} from '../../const';
 
 
@@ -11,21 +9,14 @@ type FavoritesTypeProps = {
   offers: Offer[],
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
-  cityChangeHandler(city: CityType) {
+function FavoritesLocations({offers}: FavoritesTypeProps):JSX.Element {
+  const dispatch = useDispatch();
+  const cityChangeHandler = (city: CityType) => {
     dispatch(changeCity(city));
-  },
-  redirectToRoot() {
+  };
+  const redirectToRoot = () => {
     dispatch(redirectToRoute(AppRoute.Main));
-  },
-});
-
-const connector = connect(null, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectedComponentProps = FavoritesTypeProps & PropsFromRedux;
-
-function FavoritesLocations({offers, cityChangeHandler, redirectToRoot}:ConnectedComponentProps): JSX.Element {
+  };
 
   const cities = new Set(offers.map((offer) => offer.city.name));
   const uniqueCities = Array.from(cities);
@@ -61,5 +52,4 @@ function FavoritesLocations({offers, cityChangeHandler, redirectToRoot}:Connecte
   );
 }
 
-export {FavoritesLocations};
-export default connector(FavoritesLocations);
+export default FavoritesLocations;
