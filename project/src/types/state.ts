@@ -1,6 +1,7 @@
 import {CityType, OfferType, CommentsType, PropertyOffer, SortingType} from './offer';
 import {AuthorizationStatus} from '../const';
 import {RootState} from '../store/root-reducer';
+import {store} from '../index.js';
 
 export type MainData = {
   city: CityType,
@@ -15,12 +16,16 @@ export type UserData = {
 
 export type PropertyData = {
   offer: PropertyOffer,
+  isOfferLoading: boolean,
   reviews: CommentsType,
   nearbyOffers: OfferType,
 };
 
 export type FavoritesData = {
-  favorites: OfferType
+  favorites: OfferType,
+  areFavoritesLoaded: boolean,
 }
 
 export type State = RootState;
+
+export type AppDispatch = typeof store.dispatch;

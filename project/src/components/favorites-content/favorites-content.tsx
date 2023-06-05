@@ -1,11 +1,11 @@
 import FavoritesLocations from '../favorites-locations/favorites-locations';
 import NoFavorites from '../no-favorites-offers/no-favorites-offers';
 import {getFavorites} from '../../store/favorites-data/selectors';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../../types/action';
 
 
 function FavoritesContent():JSX.Element {
-  const favorites = useSelector(getFavorites);
+  const favorites = useAppSelector(getFavorites);
 
   return (
     <main className={`page__main page__main--favorites ${favorites.length === 0 ? 'page__main--favorites-empty': ''}`}>

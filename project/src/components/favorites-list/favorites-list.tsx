@@ -1,5 +1,6 @@
 import {Offer} from '../../types/offer';
 import FavoriteOffer from '../favorite-offer/favorite-offer';
+import React from 'react';
 
 type MainOffers = {
   offers: Offer[],
@@ -14,4 +15,6 @@ function FavoritesList({offers}: MainOffers): JSX.Element {
   );
 }
 
-export default FavoritesList;
+export {FavoritesList};
+export default React.memo(FavoritesList,
+  (prevProps, nextProps) => prevProps.offers === nextProps.offers);

@@ -1,16 +1,23 @@
 import Header from '../header/header';
-import {useDispatch} from 'react-redux';
 import FavoritesContent from '../favorites-content/favorites-content';
+import {getFavoritesStatus} from '../../store/favorites-data/selectors';
+import Loader from '../loader/loader';
+import {useEffect} from 'react';
+import {useAppDispatch, useAppSelector} from '../../types/action';
 import {fetchFavoritesAction} from '../../store/api-actions';
 
 
 function Favorites():JSX.Element {
-  const dispatch = useDispatch();
-  const fetchFavoritesOffers = () => {
-    dispatch(fetchFavoritesAction());
-  };
+  const dispatch = useAppDispatch();
+  const areFavoritesLoaded = useAppSelector(getFavoritesStatus);
 
-  fetchFavoritesOffers();
+  useEffect(() => {
+    dispatch(fetchFavoritesAction());
+  }, [dispatch]);
+
+  if(!areFavoritesLoaded) {
+    return <Loader />;
+  }
 
   return (
     <div className="page">

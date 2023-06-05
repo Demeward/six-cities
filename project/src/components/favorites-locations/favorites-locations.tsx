@@ -3,6 +3,7 @@ import FavoritesList from '../favorites-list/favorites-list';
 import {changeCity, redirectToRoute} from '../../store/action';
 import {useDispatch} from 'react-redux';
 import {AppRoute} from '../../const';
+import {memo} from 'react';
 
 
 type FavoritesTypeProps = {
@@ -52,4 +53,4 @@ function FavoritesLocations({offers}: FavoritesTypeProps):JSX.Element {
   );
 }
 
-export default FavoritesLocations;
+export default memo(FavoritesLocations);

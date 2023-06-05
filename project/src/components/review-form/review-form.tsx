@@ -1,21 +1,26 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useAppDispatch} from '../../types/action';
 import RatingStar from '../rating-star/rating-star';
 import { Rating } from '../../const';
 import { postReviewAction } from '../../store/api-actions';
 import { CommentPost } from '../../types/offer';
-import {getOffer} from '../../store/property-data/selectors';
+import React from 'react';
 
+type ReviewProp = {
+  offerId: number,
+}
 
-function ReviewForm():JSX.Element {
-  const offer = useSelector(getOffer);
-  const dispatch = useDispatch();
+function ReviewForm({offerId}: ReviewProp):JSX.Element {
+  const dispatch = useAppDispatch();
   const [reviewMessage, setReviewMessage] = useState<string>('');
   const [reviewRating, setReviewRating] = useState<number>(0);
 
   const onSubmit = ({comment, rating, id}: CommentPost) => {
     dispatch(postReviewAction({comment, rating, id}));
   };
+
+  // eslint-disable-next-line no-console
+  console.log('lol');
 
   const handleRatingChange = (evt: ChangeEvent<HTMLInputElement>) =>
     setReviewRating(parseInt(evt.target.value, 10));
@@ -25,7 +30,7 @@ function ReviewForm():JSX.Element {
     onSubmit({
       comment: reviewMessage,
       rating: reviewRating,
-      id: offer?.id,
+      id: offerId,
     });
     setReviewRating(0);
     setReviewMessage('');
@@ -64,4 +69,4 @@ function ReviewForm():JSX.Element {
   );
 }
 
-export default ReviewForm;
+export default React.memo(ReviewForm);

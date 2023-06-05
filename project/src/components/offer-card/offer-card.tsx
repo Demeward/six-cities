@@ -2,7 +2,7 @@ import {Offer} from '../../types/offer';
 import {Link} from 'react-router-dom';
 import React from 'react';
 import {getAuthorizationStatus} from '../../store/user-data/selectors';
-import {useDispatch, useSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../../types/action';
 import {AppRoute, AuthorizationStatus} from '../../const';
 import {addToFavoritesAction, checkAuthAction, removeFromFavoritesAction} from '../../store/api-actions';
 import {redirectToRoute} from '../../store/action';
@@ -14,10 +14,10 @@ type OfferTypeProps = {
 
 
 function OfferCard(props:OfferTypeProps): JSX.Element {
-  const authorizationStatus = useSelector(getAuthorizationStatus);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const {offer, onActiveOfferChange} = props;
   const {id, isPremium, previewImage, price, isFavorite, title, type, rating} = offer;
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const addToFavorites = (offerid: number) => {
     dispatch(addToFavoritesAction(offerid));
@@ -37,8 +37,7 @@ function OfferCard(props:OfferTypeProps): JSX.Element {
 
   return (
     <article className="cities__place-card place-card"
-      onMouseEnter={() => {onActiveOfferChange(offer);
-      }}
+      onMouseEnter={() => onActiveOfferChange(offer)}
       onMouseLeave={() => onActiveOfferChange(null)}
     >
       <div className={isPremium ? 'place-card__mark' : 'visually-hidden'}>
@@ -47,7 +46,7 @@ function OfferCard(props:OfferTypeProps): JSX.Element {
       <div className="cities__image-wrapper place-card__image-wrapper">
         <Link to={`/offer/${id}`}>
           <img className="place-card__image" src={previewImage} width="260" height="200"
-            alt="Place image"
+            alt="Place"
           />
         </Link>
       </div>
@@ -83,7 +82,7 @@ function OfferCard(props:OfferTypeProps): JSX.Element {
           </div>
         </div>
         <h2 className="place-card__name">
-          <Link to={`/offer/${id}`}>{title}</Link>
+          <Link to={`${AppRoute.Property}/${id}`}>{title}</Link>
         </h2>
         <p className="place-card__type">{type}</p>
       </div>

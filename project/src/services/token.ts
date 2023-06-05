@@ -13,4 +13,6 @@ export const saveToken = (token: Token): void => {
 
 export const dropToken = (): void => {
   localStorage.removeItem(AUTH_TOKEN_KEY_NAME);
+  // eslint-disable-next-line no-console
+  console.log(localStorage.getItem(AUTH_TOKEN_KEY_NAME));
 };

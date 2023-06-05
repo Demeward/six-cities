@@ -13,4 +13,6 @@ export const saveEmail = (email: Email): void => {
 
 export const dropEmail = (): void => {
   localStorage.removeItem(AUTH_EMAIL);
+  // eslint-disable-next-line no-console
+  console.log(localStorage.getItem(AUTH_EMAIL));
 };

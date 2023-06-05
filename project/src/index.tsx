@@ -10,11 +10,11 @@ import {checkAuthAction, fetchOffersAction} from './store/api-actions';
 import {redirect} from './store/middlewares/redirect';
 import {rootReducer} from './store/root-reducer';
 
-const api = createAPI(
+export const api = createAPI(
   () => store.dispatch(requireAuthorization(AuthorizationStatus.NotAuth)),
 );
 
-const store = configureStore({
+export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware ({

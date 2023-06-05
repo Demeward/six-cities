@@ -7,26 +7,35 @@ import { AppRoute, AuthorizationStatus } from '../../const';
 import PropertyPhotos from '../property-photos/property-photos';
 import PropertyFeatures from '../property-features/property-features';
 import NearbyOffers from '../nearby-offers/nearby-offers';
-import { useDispatch, useSelector } from 'react-redux';
+// import { Offer } from '../../types/offer';
+import {useAppDispatch, useAppSelector} from '../../types/action';
+import {useEffect} from 'react';
+import {useParams} from 'react-router-dom';
 import { getOffer, getNearbyOffers, getReviews } from '../../store/property-data/selectors';
 import { getAuthorizationStatus } from '../../store/user-data/selectors';
-import { addToFavoritesAction, checkAuthAction, removeFromFavoritesAction } from '../../store/api-actions';
+import { addToFavoritesAction, checkAuthAction, removeFromFavoritesAction, fetchOfferAction, fetchNearbyOffersAction, fetchReviewsAction } from '../../store/api-actions';
 import { redirectToRoute } from '../../store/action';
+import React from 'react';
 
 
 function Property(): JSX.Element {
-  const offer = useSelector(getOffer);
-  const reviews = useSelector(getReviews);
-  const nearbyOffers = useSelector(getNearbyOffers);
-  const authorizationStatus = useSelector(getAuthorizationStatus);
-  const dispatch = useDispatch();
+  const { id } = useParams<{ id: string }>();
+  const currentId = Number(id);
+  const currentOffer = useAppSelector(getOffer);
+  // const isOfferLoading = useSelector(getOfferLoading);
+  const reviews = useAppSelector(getReviews);
+  const nearbyOffers = useAppSelector(getNearbyOffers);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const dispatch = useAppDispatch();
 
-  const addToFavorites = (id: number) => {
-    dispatch(addToFavoritesAction(id));
+  const addToFavorites = (offerId: number) => {
+    dispatch(addToFavoritesAction(offerId))
+      .then(() => dispatch(fetchOfferAction(offerId)));
   };
 
-  const removeFromFavorites = (id: number) => {
-    dispatch(removeFromFavoritesAction(id));
+  const removeFromFavorites = (offerId: number) => {
+    dispatch(removeFromFavoritesAction(offerId))
+      .then(() => dispatch(fetchOfferAction(offerId)));
   };
 
   const redirectToAuthScreen = () => {
@@ -37,12 +46,37 @@ function Property(): JSX.Element {
     dispatch(checkAuthAction());
   };
 
-  if (offer === null) {
-    return <Loader />;
+  useEffect(() => {
+    if(currentOffer === null || currentOffer.id !== currentId) {
+      dispatch(fetchOfferAction(currentId));
+      dispatch(fetchNearbyOffersAction(currentId));
+    }
+  }, [currentOffer, currentId, dispatch]);
+
+  useEffect(() => {
+    if (currentOffer === null || currentOffer.id !== currentId) {
+      dispatch(fetchReviewsAction(currentId));
+    }
+  }, [reviews, dispatch, currentId, currentOffer]);
+
+
+  if (!currentOffer || currentOffer.id !== currentId) {
+    return (
+      <Loader />
+    );
   }
 
-  const offersMap = [...nearbyOffers, offer];
-  const { id, isPremium, rating, price, isFavorite, title, type, bedrooms, description, goods, host, maxAdults, images } = offer;
+  const nearbyProps = {
+    nearby: nearbyOffers,
+    offerId: currentId,
+  };
+
+  const reviewProps = {
+    offerId: currentId,
+  };
+
+  const offersMap = [...nearbyOffers, currentOffer];
+  const { isPremium, rating, price, isFavorite, title, type, bedrooms, description, goods, host, maxAdults, images } = currentOffer;
 
   return (
     <>
@@ -64,7 +98,7 @@ function Property(): JSX.Element {
                 <h1 className="property__name">
                   {title}
                 </h1>
-                <button className={`property__bookmark-button ${isFavorite ? 'property__bookmark-button--active' : ''} button`} type="button"
+                <button className={`property__bookmark-button ${isFavorite && authorizationStatus === AuthorizationStatus.Auth ? 'property__bookmark-button--active' : ''} button`} type="button"
                   onClick={(evt) => {
                     evt.preventDefault();
                     checkAuthorization();
@@ -72,9 +106,9 @@ function Property(): JSX.Element {
                       return redirectToAuthScreen();
                     }
                     if (isFavorite) {
-                      return removeFromFavorites(id);
+                      return removeFromFavorites(currentId);
                     }
-                    return addToFavorites(id);
+                    return addToFavorites(currentId);
                   }}
                 >
                   <svg className="property__bookmark-icon" width="31" height="33">
@@ -134,21 +168,21 @@ function Property(): JSX.Element {
                   ? <ReviewsList reviews={reviews} />
                   : ''}
                 {authorizationStatus === AuthorizationStatus.Auth
-                  ? <ReviewForm />
+                  ? <ReviewForm {...reviewProps} />
                   : ''}
               </section>
             </div>
           </div>
           <section className="property__map map">
-            <Map offers={offersMap} activeOffer={offer} />
+            <Map offers={offersMap} activeOffer={currentOffer} />
           </section>
         </section>
         <div className="container">
-          <NearbyOffers />
+          <NearbyOffers {...nearbyProps}/>
         </div>
       </main>
     </>
   );
 }
 
-export default Property;
+export default React.memo(Property);

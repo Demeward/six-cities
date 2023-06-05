@@ -4,6 +4,7 @@ import {fillNearbyList, fillOffer, fillReviews} from '../action';
 
 const initialState: PropertyData = {
   offer: null,
+  isOfferLoading: true,
   reviews: [],
   nearbyOffers: [],
 };

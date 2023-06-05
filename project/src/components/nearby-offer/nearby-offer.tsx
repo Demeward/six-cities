@@ -3,25 +3,28 @@ import {Link} from 'react-router-dom';
 import {Offer} from '../../types/offer';
 import {AppRoute, AuthorizationStatus} from '../../const';
 import {getAuthorizationStatus} from '../../store/user-data/selectors';
-import {useDispatch, useSelector} from 'react-redux';
-import {addToFavoritesAction, checkAuthAction, removeFromFavoritesAction} from '../../store/api-actions';
+import {useAppDispatch, useAppSelector} from '../../types/action';
+import {addToFavoritesAction, checkAuthAction, removeFromFavoritesAction, fetchNearbyOffersAction} from '../../store/api-actions';
 import {redirectToRoute} from '../../store/action';
 
 type NearbyOferCardProps = {
-  offer: Offer
+  offer: Offer,
+  currentId: number,
 }
 
-function NearbyOfferCard({offer}: NearbyOferCardProps): JSX.Element {
-  const authorizationStatus = useSelector(getAuthorizationStatus);
-  const {id, isPremium, previewImage, price, isFavorite, title, type, rating} = offer;
-  const dispatch = useDispatch();
+function NearbyOfferCard({offer, currentId}: NearbyOferCardProps): JSX.Element {
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const {id, isPremium, isFavorite, previewImage, price, title, type, rating} = offer;
+  const dispatch = useAppDispatch();
 
   const addToFavorites = (offerid: number) => {
-    dispatch(addToFavoritesAction(offerid));
+    dispatch(addToFavoritesAction(offerid))
+      .then(() => dispatch(fetchNearbyOffersAction(currentId)));
   };
 
   const removeFromFavorites = (offerid: number) => {
-    dispatch(removeFromFavoritesAction(offerid));
+    dispatch(removeFromFavoritesAction(offerid))
+      .then(() => dispatch(fetchNearbyOffersAction(currentId)));
   };
 
   const redirectToAuthScreen = () => {
@@ -50,7 +53,7 @@ function NearbyOfferCard({offer}: NearbyOferCardProps): JSX.Element {
             <b className="place-card__price-value">&euro;{price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <button className={`place-card__bookmark-button ${isFavorite ? 'place-card__bookmark-button--active' : ''} button`} type="button"
+          <button className={`place-card__bookmark-button ${isFavorite && authorizationStatus === AuthorizationStatus.Auth ? 'place-card__bookmark-button--active' : ''} button`} type="button"
             onClick={(evt) => {
               evt.preventDefault();
               checkAuthorization();

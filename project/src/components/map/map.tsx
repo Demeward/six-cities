@@ -1,4 +1,4 @@
-import {useRef, useEffect} from 'react';
+import {memo, useRef, useEffect} from 'react';
 import leaflet, {LayerGroup, Marker} from 'leaflet';
 import useMap from '../../hooks/useMap';
 import {Offer} from '../../types/offer';
@@ -11,6 +11,9 @@ type MapProps = {
 
 function Map(props: MapProps): JSX.Element {
   const {offers, activeOffer} = props;
+
+  // eslint-disable-next-line no-console
+  console.log('map');
 
   const defaultCustomIcon = leaflet.icon({
     iconUrl: 'img/pin.svg',
@@ -60,4 +63,8 @@ function Map(props: MapProps): JSX.Element {
   return <div style={{height: '100%'}} ref={mapRef}></div>;
 }
 
-export default Map;
+function equalProps(prevProps:MapProps, nextProps:MapProps) {
+  return prevProps.offers === nextProps.offers && prevProps.activeOffer === nextProps.activeOffer;
+}
+
+export default memo(Map, equalProps);

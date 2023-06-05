@@ -1,9 +1,8 @@
 import {useRef, FormEvent} from 'react';
-import {useSelector} from 'react-redux';
 import {AuthData} from '../../types/auth';
 import Logo from '../logo/logo';
 import {loginAction} from '../../store/api-actions';
-import {useDispatch} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../../types/action';
 import {AppRoute, AuthorizationStatus, getRandomCity} from '../../const';
 import {changeCity} from '../../store/action';
 import {useNavigate, Navigate} from 'react-router-dom';
@@ -13,12 +12,12 @@ import {getAuthorizationStatus} from '../../store/user-data/selectors';
 
 function Login():JSX.Element {
   const randomCity = getRandomCity();
-  const authorizationStatus = useSelector(getAuthorizationStatus);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
   const history = useNavigate();
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const onSubmit = (authData: AuthData) => {
     dispatch(loginAction(authData));

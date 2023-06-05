@@ -1,14 +1,15 @@
 import {Offer} from '../../types/offer';
 import {Link} from 'react-router-dom';
 import {removeFromFavoritesAction} from '../../store/api-actions';
-import {useDispatch} from 'react-redux';
+import {useAppDispatch} from '../../types/action';
+import {memo} from 'react';
 
 type OfferTypeProps = {
   offer: Offer,
 }
 
 function FavoriteOffer({offer}:OfferTypeProps): JSX.Element {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const removeOfferFromFavorites = (id: number) => {
     dispatch(removeFromFavoritesAction(id));
   };
@@ -58,4 +59,4 @@ function FavoriteOffer({offer}:OfferTypeProps): JSX.Element {
   );
 }
 
-export default FavoriteOffer;
+export default memo(FavoriteOffer);

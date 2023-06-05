@@ -2,11 +2,11 @@ import { Link } from 'react-router-dom';
 import { AppRoute } from '../../const';
 import { getEmail } from '../../services/email';
 import {logoutAction} from '../../store/api-actions';
-import {useDispatch} from 'react-redux';
+import {useAppDispatch} from '../../types/action';
 
 
 function LoggedIn():JSX.Element {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const onLogout = () => {
     dispatch(logoutAction());
   };

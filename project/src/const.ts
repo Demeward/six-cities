@@ -5,7 +5,9 @@ enum AppRoute {
   Login = '/login',
   Main = '/',
   Favorites = '/favorites',
-  Room = '/offer/:id'
+  Property = '/offer',
+  Room = '/offer/:id',
+  NoPage = '*',
 }
 
 enum City {
@@ -147,6 +149,7 @@ enum APIRoute {
   Logout = '/logout',
   Comments = '/comments',
   Favorite = '/favorite',
+  FavoritePlace = '/favorite/:id/:status'
 }
 
 export { AppRoute, AuthorizationStatus, City, Rating, Sorting, APIRoute, filterOffers, sortOffers, toClientOffers, toClientOffer, toClientAuthInfo, toClientReviews, getRandomCity };

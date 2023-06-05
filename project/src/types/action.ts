@@ -1,6 +1,7 @@
-import {Action, ThunkAction, ThunkDispatch} from '@reduxjs/toolkit';
-import {AxiosInstance} from 'axios';
-import {State} from './state';
+// import {Action, ThunkAction, ThunkDispatch} from '@reduxjs/toolkit';
+// import {AxiosInstance} from 'axios';
+import {State, AppDispatch} from './state';
+import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
 
 export enum ActionType {
   ChangeCity = 'main/changeCity',
@@ -15,8 +16,10 @@ export enum ActionType {
   FillFavorites = 'favorites/fillFavorites',
   RemoveFromFavorites = 'favorites/removeFromFavorites',
   UpdateOffer = 'main/updateOffer',
+  CheckIfauthStatusChanged = 'user/checkIfauthStatusChanged',
 }
 
-export type ThunkActionResult<R = Promise<void>> = ThunkAction<R, State, AxiosInstance, Action>;
 
-export type ThunkAppDispatch = ThunkDispatch<State, AxiosInstance, Action>;
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+
+export const useAppSelector: TypedUseSelectorHook<State> = useSelector;

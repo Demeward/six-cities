@@ -5,6 +5,7 @@ import { sortOffers } from '../../const';
 import {useDispatch, useSelector} from 'react-redux';
 import { changeSorting } from '../../store/action';
 import {getSorting} from '../../store/main-data/selectors';
+import React from 'react';
 
 
 type MainOffers = {
@@ -35,4 +36,6 @@ function OffersList(props: MainOffers): JSX.Element {
   );
 }
 
-export default OffersList;
+export {OffersList};
+export default React.memo(OffersList,
+  (prevProps, nextProps) => prevProps.offers === nextProps.offers);
